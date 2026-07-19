@@ -38,3 +38,12 @@ index.render.speed = "1.0"
 # Finaler Output für index.html
 index.output = "EDEN.index.final"
 index.state  = "active"
+index.load += [
+  "WELT.index.language",
+  "WELT.index.html.layer"
+]
+
+index.pipeline += [
+  "WELT.language.final",
+  "WELT.index.html.final"
+]
