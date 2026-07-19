@@ -8,3 +8,17 @@
   <button data-lang="NE">er</button>
   <button data-lang="BEN">ich</button>
 </div>
+
+<script>
+function WELT_language_switch(lang) {
+  window.WELT_CURRENT_LANGUAGE = lang;
+  console.log("Sprache gewechselt zu:", lang);
+}
+
+document.querySelectorAll('#language-index button').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const lang = btn.getAttribute('data-lang');
+    WELT_language_switch(lang);
+  });
+});
+</script>
