@@ -1,5 +1,5 @@
 [WELT.language.switch]
-version = 1.0
+version = 1.1
 type    = "welt-language-switch"
 
 switch.bind = "WELT.language.buttons.final"
@@ -8,11 +8,13 @@ switch.map = {
   DE  = "WELT.language.DE",
   TR  = "WELT.language.TR",
   EN  = "WELT.language.EN",
-  DA  = "WELT.language.DA",
-  NE  = "WELT.language.NE",
-  BEN = "WELT.language.custom"
+
+  # frei wählbare Slots
+  DA  = "WELT.language.du",
+  NE  = "WELT.language.er",
+  BEN = "WELT.language.ich"
 }
 
-switch.mode = ["manual","auto","fallback"]
+switch.mode   = ["manual","auto","fallback"]
 switch.output = "WELT.language.switch.final"
 switch.state  = "active"
