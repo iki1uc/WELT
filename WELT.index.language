@@ -1,27 +1,19 @@
 [WELT.index.language]
-version = 1.0
+version = 1.1
 type    = "welt-language"
-zero    = 0
 
-lang.support = ["DE","TR","EN","DA","NE"]
+lang.support = ["DE","TR","EN","DA","NE","BEN"]
 lang.default = "DE"
 
-lang.map = {
-  DE = "Deutsch",
-  TR = "Türkçe",
-  EN = "English",
-  DA = "Dansk",
-  NE = "Nederlands"
+lang.labels = {
+  DE  = "Deutsch",
+  TR  = "Türkçe",
+  EN  = "English",
+  DA  = "du",
+  NE  = "er",
+  BEN = "ich"
 }
 
-lang.bind = [
-  "WELT.portal.final",
-  "WELT.layer.final",
-  "WELT.room.final",
-  "WELT.sync.final",
-  "EDEN.index.final"
-]
-
-lang.mode = ["switch","auto","manual","fallback"]
+lang.mode   = ["switch","auto","manual","fallback"]
 lang.output = "WELT.language.final"
 lang.state  = "active"
