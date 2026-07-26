@@ -1,1 +1,7 @@
+#ROM
+AXIS:
+H: +X
+B: +Y
+T: +Z
+STATE: FIXED
 
