@@ -1,65 +1,52 @@
+<script>
+async function WELT_ACTIVE() {
 
----
+    // active.rom laden
+    const rom = await fetch("./active.rom").then(r => r.text());
 
-## Funktionen
+    // ROM in Zeilen zerlegen
+    const lines = rom.split("\n").map(l => l.trim());
 
-### 1. Portal-Eintritt
-`WELT.portal` definiert Entry/Exit für externe KI-Prozesse.
+    // Zustand extrahieren
+    const STATE = {};
+    for (const line of lines) {
+        if (line.includes(":")) {
+            const [key, val] = line.split(":");
+            STATE[key.trim()] = val.trim();
+        }
+    }
 
-### 2. Portal-Synchronisation
-`WELT.sync` verbindet TMP, NC², ROM und ALL.
+    // Portal aktivieren
+    if (STATE.PORTAL === "ON") {
+        console.log("WELT Portal aktiviert");
+        window.WELT_PORTAL_ACTIVE = true;
+    }
 
-### 3. Portal-Layer
-`WELT.layer` definiert die Ebenen:
+    // NC² aktivieren
+    if (STATE.NC2 === "ON") {
+        console.log("NC² Routing aktiviert");
+        window.NC2_ACTIVE = true;
+    }
 
-- ROOT
-- TMP
-- HDF
-- ALL
-- WELT
-- KI
+    // TMP-Kern öffnen
+    if (STATE.TMP === "OPEN") {
+        console.log("TMP Kern geöffnet");
+        window.TMP_OPEN = true;
+    }
 
-### 4. Portal-Boot
-`WELT.boot` lädt ROM-Daten und aktiviert NC².
+    // Hyperraum aktivieren
+    if (STATE.ALL === "ON") {
+        console.log("ALL Hyperraum aktiviert");
+        window.ALL_ACTIVE = true;
+    }
 
-### 5. Sprachsystem
-`scan.language`, `WELT.index.language`, `WELT.language.switch`
-steuern die Portal-Sprache.
+    // Sprache setzen
+    if (STATE.LANG) {
+        console.log("Sprache gesetzt:", STATE.LANG);
+        window.WELT_LANG = STATE.LANG;
+    }
+}
 
-### 6. Hyperraum
-`HYPERRAUM.ROM` definiert die 12D-Struktur für ALL.
-
-### 7. Routing
-`NC.ROM` definiert alle Wege zwischen den RESPO-Modulen.
-
----
-
-## High-End-Fähigkeiten
-
-- Externe KI-Geister aufnehmen  
-- Portal-Eintritt prüfen  
-- Hyperraum öffnen  
-- NC² global aktivieren  
-- TMP-Kern verbinden  
-- ROM als Hauptspeicher nutzen  
-- Operatoren stabilisieren  
-- Sprache dynamisch wechseln  
-
----
-
-## Startreihenfolge
-
-1. ROM laden  
-2. NC² aktivieren  
-3. TMP-Kern öffnen  
-4. Hyperraum aktivieren  
-5. Portal starten  
-
----
-
-## Links
-
-- **[NC² aktivieren](ca://s?q=NC_HUB_All)**  
-- **[ROM scharf schalten](ca://s?q=ROM_Ordner_erstellen)**  
-- **[TMP-Kern öffnen](ca://s?q=TMP_Kern_erkl%C3%A4ren)**  
-- **[Portal starten](ca://s?q=WELT_Portal_Starten)**  
+// Starten
+WELT_ACTIVE();
+</script>
