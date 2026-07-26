@@ -1,15 +1,7 @@
-[WELT.layer]
-version = 1.0
-type    = "welt-layer"
-
-layer.name   = "WELT.HI"
-layer.mode   = ["global","eden","portal","overlay"]
-
-layer.bind = [
-  "HI.layer.final",
-  "WELT.portal.final"
-]
-
-layer.output = "WELT.layer.final"
-layer.state  = "active"
-
+LAYER:
+0: ROOT
+1: TMP
+2: HDF
+3: ALL
+4: WELT
+5: KI
