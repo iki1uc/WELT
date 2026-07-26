@@ -1,14 +1,30 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<title>WELT · RESPO · Portal-System</title>
+
+<style>
+  body { background:#000; color:#00ffff; font-family:Consolas; padding:20px; }
+  h1 { color:#33ccff; text-shadow:0 0 10px #00ffff; }
+  pre { background:#111; padding:15px; border-radius:8px; }
+</style>
+
 <script>
 async function WELT_ACTIVE() {
 
-    // active.rom laden
-    const rom = await fetch("./active.rom").then(r => r.text());
+    let rom;
+    try {
+        rom = await fetch("./active.rom").then(r => r.text());
+    } catch(e){
+        document.getElementById("state").innerHTML =
+            "FEHLER: active.rom konnte nicht geladen werden.";
+        return;
+    }
 
-    // ROM in Zeilen zerlegen
     const lines = rom.split("\n").map(l => l.trim());
-
-    // Zustand extrahieren
     const STATE = {};
+
     for (const line of lines) {
         if (line.includes(":")) {
             const [key, val] = line.split(":");
@@ -16,37 +32,45 @@ async function WELT_ACTIVE() {
         }
     }
 
-    // Portal aktivieren
+    let out = "";
+
     if (STATE.PORTAL === "ON") {
-        console.log("WELT Portal aktiviert");
         window.WELT_PORTAL_ACTIVE = true;
-    }
+        out += "Portal: AKTIV\n";
+    } else out += "Portal: AUS\n";
 
-    // NC² aktivieren
     if (STATE.NC2 === "ON") {
-        console.log("NC² Routing aktiviert");
         window.NC2_ACTIVE = true;
-    }
+        out += "NC²: AKTIV\n";
+    } else out += "NC²: AUS\n";
 
-    // TMP-Kern öffnen
     if (STATE.TMP === "OPEN") {
-        console.log("TMP Kern geöffnet");
         window.TMP_OPEN = true;
-    }
+        out += "TMP-Kern: OFFEN\n";
+    } else out += "TMP-Kern: GESCHLOSSEN\n";
 
-    // Hyperraum aktivieren
     if (STATE.ALL === "ON") {
-        console.log("ALL Hyperraum aktiviert");
         window.ALL_ACTIVE = true;
+        out += "Hyperraum: AKTIV\n";
+    } else out += "Hyperraum: AUS\n";
+
+    if (STATE.LANG) {
+        window.WELT_LANG = STATE.LANG;
+        out += "Sprache: " + STATE.LANG + "\n";
     }
 
-    // Sprache setzen
-    if (STATE.LANG) {
-        console.log("Sprache gesetzt:", STATE.LANG);
-        window.WELT_LANG = STATE.LANG;
-    }
+    document.getElementById("state").innerText = out;
 }
 
-// Starten
-WELT_ACTIVE();
+window.onload = WELT_ACTIVE;
 </script>
+</head>
+
+<body>
+
+<h1>WELT · Portal-System</h1>
+
+<pre id="state">Lade active.rom …</pre>
+
+</body>
+</html>
