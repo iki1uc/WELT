@@ -2,75 +2,98 @@
 <html lang="de">
 <head>
 <meta charset="UTF-8">
-<title>WELT · RESPO · Portal-System</title>
+<title>WELT · Portal‑System · iki1uc</title>
 
 <style>
-  body { background:#000; color:#00ffff; font-family:Consolas; padding:20px; }
-  h1 { color:#33ccff; text-shadow:0 0 10px #00ffff; }
-  pre { background:#111; padding:15px; border-radius:8px; }
-</style>
-
-<script>
-async function WELT_ACTIVE() {
-
-    let rom;
-    try {
-        rom = await fetch("./active.rom").then(r => r.text());
-    } catch(e){
-        document.getElementById("state").innerHTML =
-            "FEHLER: active.rom konnte nicht geladen werden.";
-        return;
-    }
-
-    const lines = rom.split("\n").map(l => l.trim());
-    const STATE = {};
-
-    for (const line of lines) {
-        if (line.includes(":")) {
-            const [key, val] = line.split(":");
-            STATE[key.trim()] = val.trim();
-        }
-    }
-
-    let out = "";
-
-    if (STATE.PORTAL === "ON") {
-        window.WELT_PORTAL_ACTIVE = true;
-        out += "Portal: AKTIV\n";
-    } else out += "Portal: AUS\n";
-
-    if (STATE.NC2 === "ON") {
-        window.NC2_ACTIVE = true;
-        out += "NC²: AKTIV\n";
-    } else out += "NC²: AUS\n";
-
-    if (STATE.TMP === "OPEN") {
-        window.TMP_OPEN = true;
-        out += "TMP-Kern: OFFEN\n";
-    } else out += "TMP-Kern: GESCHLOSSEN\n";
-
-    if (STATE.ALL === "ON") {
-        window.ALL_ACTIVE = true;
-        out += "Hyperraum: AKTIV\n";
-    } else out += "Hyperraum: AUS\n";
-
-    if (STATE.LANG) {
-        window.WELT_LANG = STATE.LANG;
-        out += "Sprache: " + STATE.LANG + "\n";
-    }
-
-    document.getElementById("state").innerText = out;
+body {
+  background:#000;
+  color:#0ff;
+  font-family:Consolas, monospace;
+  padding:20px;
 }
 
-window.onload = WELT_ACTIVE;
-</script>
+h1 {
+  color:#6cf;
+  text-shadow:0 0 15px #6cf;
+  text-align:center;
+}
+
+.block {
+  border:1px solid #0ff;
+  padding:20px;
+  margin:25px 0;
+  background:#111;
+  border-radius:10px;
+}
+
+#portal, #room, #bridge, #geo {
+  padding:15px;
+  background:#000;
+  border:1px solid #333;
+  border-radius:8px;
+  margin-top:10px;
+}
+
+#geo {
+  font-size:26px;
+  text-align:center;
+  letter-spacing:6px;
+  transition:0.4s;
+}
+</style>
 </head>
 
 <body>
 
-<h1>WELT · Portal-System</h1>
+<h1>WELT · Portal‑System</h1>
 
-<pre id="state">Lade active.rom …</pre>
+<div class="block">
+  <h2>Portal‑Viewer</h2>
+  <pre id="portal"></pre>
+</div>
+
+<div class="block">
+  <h2>Room‑Visualizer</h2>
+  <pre id="room"></pre>
+</div>
+
+<div class="block">
+  <h2>Universe‑Bridge</h2>
+  <pre id="bridge"></pre>
+</div>
+
+<div class="block">
+  <h2>Geo‑Formation</h2>
+  <div id="geo"></div>
+</div>
+
+<script type="module">
+import "./raum.js"; // setzt dataset.welt
+
+// Portal Viewer
+document.getElementById("portal").textContent =
+    "PORTAL: " + document.body.dataset.portal;
+
+// Room Visualizer
+document.getElementById("room").textContent =
+    "ROOM: " + document.body.dataset.room;
+
+// Universe Bridge
+document.getElementById("bridge").textContent =
+    "WELT‑Node: " + document.body.dataset.welt;
+
+// Geo‑Formation
+const geo = document.getElementById("geo");
+if(document.body.dataset.welt.includes("portal")){
+    geo.textContent = "WELT‑PORTAL";
+    geo.style.color = "#ff0";
+    geo.style.textShadow = "0 0 20px #ff0";
+} else {
+    geo.textContent = "WELT‑NODE";
+    geo.style.color = "#0ff";
+    geo.style.textShadow = "0 0 10px #0ff";
+}
+</script>
 
 </body>
 </html>
