@@ -2,97 +2,105 @@
 <html lang="de">
 <head>
 <meta charset="UTF-8">
-<title>WELT · Portal‑System · iki1uc</title>
+<title>WELT · MA³ · Orbit‑Geo‑Core</title>
 
 <style>
-body {
-  background:#000;
-  color:#0ff;
-  font-family:Consolas, monospace;
-  padding:20px;
-}
-
-h1 {
-  color:#6cf;
-  text-shadow:0 0 15px #6cf;
-  text-align:center;
-}
-
-.block {
-  border:1px solid #0ff;
-  padding:20px;
-  margin:25px 0;
-  background:#111;
-  border-radius:10px;
-}
-
-#portal, #room, #bridge, #geo {
-  padding:15px;
-  background:#000;
-  border:1px solid #333;
-  border-radius:8px;
-  margin-top:10px;
-}
-
-#geo {
-  font-size:26px;
-  text-align:center;
-  letter-spacing:6px;
-  transition:0.4s;
-}
+body { background:#000; color:#0f0; font-family:Consolas; padding:30px; }
+h1 { color:#6cf; margin-bottom:20px; }
+canvas { background:#111; border:1px solid #0f0; display:block; margin-top:20px; }
+pre { background:#111; padding:10px; border-left:3px solid #6cf; }
 </style>
 </head>
 
 <body>
 
-<h1>WELT · Portal‑System</h1>
+<h1>WELT · MA³ · Orbit‑Geo‑Core</h1>
+<canvas id="weltCanvas" width="700" height="450"></canvas>
 
-<div class="block">
-  <h2>Portal‑Viewer</h2>
-  <pre id="portal"></pre>
-</div>
+<pre id="geo">Lade geo.md Ebenen…</pre>
 
-<div class="block">
-  <h2>Room‑Visualizer</h2>
-  <pre id="room"></pre>
-</div>
+<script>
+// ------------------------------------------------------
+// WELT.ORBIT.MA³ – FINAL VERSION
+// ------------------------------------------------------
 
-<div class="block">
-  <h2>Universe‑Bridge</h2>
-  <pre id="bridge"></pre>
-</div>
+const c = document.getElementById("weltCanvas");
+const x = c.getContext("2d");
 
-<div class="block">
-  <h2>Geo‑Formation</h2>
-  <div id="geo"></div>
-</div>
+let t = 0;
 
-<script type="module">
-import "./raum.js"; // setzt dataset.welt
+// 3 Atome
+const atoms = [
+  { r: 100, speed: 0.03, color: "#0ff" },
+  { r: 150, speed: 0.02, color: "#f0f" },
+  { r: 200, speed: 0.015, color: "#ff0" }
+];
 
-// Portal Viewer
-document.getElementById("portal").textContent =
-    "PORTAL: " + document.body.dataset.portal;
-
-// Room Visualizer
-document.getElementById("room").textContent =
-    "ROOM: " + document.body.dataset.room;
-
-// Universe Bridge
-document.getElementById("bridge").textContent =
-    "WELT‑Node: " + document.body.dataset.welt;
-
-// Geo‑Formation
-const geo = document.getElementById("geo");
-if(document.body.dataset.welt.includes("portal")){
-    geo.textContent = "WELT‑PORTAL";
-    geo.style.color = "#ff0";
-    geo.style.textShadow = "0 0 20px #ff0";
-} else {
-    geo.textContent = "WELT‑NODE";
-    geo.style.color = "#0ff";
-    geo.style.textShadow = "0 0 10px #0ff";
+// 6 geo.md Ebenen laden
+async function loadGeo(){
+  try{
+    const r = await fetch("./geo.md");
+    const txt = await r.text();
+    document.getElementById("geo").textContent = txt;
+  }catch(e){
+    document.getElementById("geo").textContent = "geo.md fehlt";
+  }
 }
+loadGeo();
+
+// ------------------------------------------------------
+// RENDER LOOP
+// ------------------------------------------------------
+
+function renderWELT(){
+  x.clearRect(0,0,c.width,c.height);
+
+  const cx = c.width/2;
+  const cy = c.height/2;
+
+  // ------------------------------------------------------
+  // 1. WELT‑BUCHSTABEN (WL) – 360° Rotation
+  // ------------------------------------------------------
+  x.save();
+  x.translate(cx, cy);
+  x.rotate(t);
+
+  x.fillStyle = "#6cf";
+  x.font = "bold 150px Consolas";
+  x.textAlign = "center";
+  x.textBaseline = "middle";
+  x.fillText("WL", 0, 0);
+
+  x.restore();
+
+  // ------------------------------------------------------
+  // 2. ATOM‑ORBIT (3 Atome)
+  // ------------------------------------------------------
+  atoms.forEach((atom, i)=>{
+    const angle = t * (1 + atom.speed * 20);
+
+    const ax = cx + Math.cos(angle + i) * atom.r;
+    const ay = cy + Math.sin(angle + i) * atom.r;
+
+    x.fillStyle = atom.color;
+    x.beginPath();
+    x.arc(ax, ay, 12, 0, Math.PI*2);
+    x.fill();
+  });
+
+  // ------------------------------------------------------
+  // 3. MA³‑CORE (Zentrum)
+  // ------------------------------------------------------
+  x.fillStyle = "#0f0";
+  x.beginPath();
+  x.arc(cx, cy, 10, 0, Math.PI*2);
+  x.fill();
+
+  t += 0.01;
+  requestAnimationFrame(renderWELT);
+}
+
+renderWELT();
 </script>
 
 </body>
