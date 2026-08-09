@@ -99,7 +99,40 @@ function renderWELT(){
   t += 0.01;
   requestAnimationFrame(renderWELT);
 }
+<script>
+function WELT_ROUTER(){
+  const path = window.location.pathname;
 
+  // geo.md → NICHT redirecten
+  if(path.endsWith(".md")){
+    return;
+  }
+
+  // YAML → Ordner-Redirect
+  if(path.endsWith(".yml") || path.endsWith(".yaml")){
+    const folder = path.split("/").slice(0,-1).join("/") + "/";
+    window.location.href = folder;
+    return;
+  }
+
+  // ROM → Portal-Loader
+  if(path.endsWith(".rom")){
+    window.location.href = "/WELT.portal";
+    return;
+  }
+
+  // SCAN → Raum-Loader
+  if(path.endsWith(".scan")){
+    window.location.href = "/WELT.room";
+    return;
+  }
+}
+
+// Router nur bei Fehlern aktivieren
+window.addEventListener("error", WELT_ROUTER);
+</script>
+
+  
 renderWELT();
 <script>
 function WELT_ROUTER(){
