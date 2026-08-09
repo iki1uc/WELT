@@ -21,7 +21,7 @@ pre { background:#111; padding:10px; border-left:3px solid #6cf; }
 
 <script>
 // ------------------------------------------------------
-// WELT.ORBIT.MA³ – FINAL VERSION
+// WELT.ORBIT.MA³ – FIXED VERSION
 // ------------------------------------------------------
 
 const c = document.getElementById("weltCanvas");
@@ -36,7 +36,7 @@ const atoms = [
   { r: 200, speed: 0.015, color: "#ff0" }
 ];
 
-// 6 geo.md Ebenen laden
+// GEO laden
 async function loadGeo(){
   try{
     const r = await fetch("./geo.md");
@@ -51,16 +51,13 @@ loadGeo();
 // ------------------------------------------------------
 // RENDER LOOP
 // ------------------------------------------------------
-
 function renderWELT(){
   x.clearRect(0,0,c.width,c.height);
 
   const cx = c.width/2;
   const cy = c.height/2;
 
-  // ------------------------------------------------------
-  // 1. WELT‑BUCHSTABEN (WL) – 360° Rotation
-  // ------------------------------------------------------
+  // WELT Rotation
   x.save();
   x.translate(cx, cy);
   x.rotate(t);
@@ -73,9 +70,7 @@ function renderWELT(){
 
   x.restore();
 
-  // ------------------------------------------------------
-  // 2. ATOM‑ORBIT (3 Atome)
-  // ------------------------------------------------------
+  // Atome
   atoms.forEach((atom, i)=>{
     const angle = t * (1 + atom.speed * 20);
 
@@ -88,9 +83,7 @@ function renderWELT(){
     x.fill();
   });
 
-  // ------------------------------------------------------
-  // 3. MA³‑CORE (Zentrum)
-  // ------------------------------------------------------
+  // MA³ Core
   x.fillStyle = "#0f0";
   x.beginPath();
   x.arc(cx, cy, 10, 0, Math.PI*2);
@@ -99,14 +92,16 @@ function renderWELT(){
   t += 0.01;
   requestAnimationFrame(renderWELT);
 }
-<script>
+renderWELT();
+
+// ------------------------------------------------------
+// WELT ROUTER – FIXED VERSION
+// ------------------------------------------------------
 function WELT_ROUTER(){
   const path = window.location.pathname;
 
   // geo.md → NICHT redirecten
-  if(path.endsWith(".md")){
-    return;
-  }
+  if(path.endsWith(".md")) return;
 
   // YAML → Ordner-Redirect
   if(path.endsWith(".yml") || path.endsWith(".yaml")){
@@ -115,13 +110,13 @@ function WELT_ROUTER(){
     return;
   }
 
-  // ROM → Portal-Loader
+  // ROM → Portal
   if(path.endsWith(".rom")){
     window.location.href = "/WELT.portal";
     return;
   }
 
-  // SCAN → Raum-Loader
+  // SCAN → Raum
   if(path.endsWith(".scan")){
     window.location.href = "/WELT.room";
     return;
@@ -130,49 +125,6 @@ function WELT_ROUTER(){
 
 // Router nur bei Fehlern aktivieren
 window.addEventListener("error", WELT_ROUTER);
-</script>
-
-  
-renderWELT();
-<script>
-function WELT_ROUTER(){
-  const path = window.location.pathname;
-
-  // YAML → Ordner-Redirect
-  if(path.endsWith(".yml") || path.endsWith(".yaml")){
-    const folder = path.split("/").slice(0,-1).join("/") + "/";
-    window.location.href = folder;
-    return;
-  }
-
-  // ROM → Portal-Loader
-  if(path.endsWith(".rom")){
-    fetch(path)
-      .then(r => r.text())
-      .then(data => {
-        console.log("ROM geladen:", data);
-        window.location.href = "/WELT.portal";
-      });
-    return;
-  }
-
-  // SCAN → Raum-Loader
-  if(path.endsWith(".scan")){
-    fetch(path)
-      .then(r => r.text())
-      .then(scan => {
-        console.log("SCAN:", scan);
-        window.location.href = "/WELT.room";
-      });
-    return;
-  }
-}
-
-WELT_ROUTER();
-
-
-
-
 </script>
 
 </body>
