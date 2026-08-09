@@ -101,6 +101,45 @@ function renderWELT(){
 }
 
 renderWELT();
+<script>
+function WELT_ROUTER(){
+  const path = window.location.pathname;
+
+  // YAML → Ordner-Redirect
+  if(path.endsWith(".yml") || path.endsWith(".yaml")){
+    const folder = path.split("/").slice(0,-1).join("/") + "/";
+    window.location.href = folder;
+    return;
+  }
+
+  // ROM → Portal-Loader
+  if(path.endsWith(".rom")){
+    fetch(path)
+      .then(r => r.text())
+      .then(data => {
+        console.log("ROM geladen:", data);
+        window.location.href = "/WELT.portal";
+      });
+    return;
+  }
+
+  // SCAN → Raum-Loader
+  if(path.endsWith(".scan")){
+    fetch(path)
+      .then(r => r.text())
+      .then(scan => {
+        console.log("SCAN:", scan);
+        window.location.href = "/WELT.room";
+      });
+    return;
+  }
+}
+
+WELT_ROUTER();
+
+
+
+
 </script>
 
 </body>
